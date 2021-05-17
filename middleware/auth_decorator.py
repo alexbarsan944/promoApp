@@ -2,7 +2,7 @@ from flask import session
 from functools import wraps
 
 
-def login_required(f):
+def google_auth_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         user = dict(session).get('profile', None)

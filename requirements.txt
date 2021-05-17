@@ -20,3 +20,7 @@ requests==2.23.0
 six==1.14.0
 urllib3==1.25.8
 Werkzeug==1.0.1
+Flask-PyMongo
+Bcrypt-Flask
+pymongo~=3.11.4
+PyJWT~=2.1.0
