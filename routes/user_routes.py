@@ -13,7 +13,7 @@ def logout():
     return redirect('/')
 
 
-def authorize(oauth):
+def authorize(mongo, oauth):
     google = oauth.create_client('google')  # create the google oauth client
     token = google.authorize_access_token()  # Access token from google (needed to get user info)
     print(google)
@@ -22,7 +22,20 @@ def authorize(oauth):
     print(resp)
     user_info = resp.json()
     user = oauth.google.userinfo()  # uses openid endpoint to fetch user info
-    print(user)
+
+    name = user['name']
+    email = user['email']
+    sub = user['sub']
+    user_object = {
+        "sub": sub,
+        "name": name,
+        "email": email,
+        "cards": []
+    }
     session['profile'] = user_info
     session.permanent = True
+    user_id = mongo.db.users.find_one({"sub": sub})
+    if user_id is None:
+        var = mongo.db.users.insert_one(user_object).inserted_id
+
     return redirect('/')

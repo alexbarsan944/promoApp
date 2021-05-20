@@ -58,7 +58,7 @@ def hello_world():
     return f'Hello {name}, you are logged in as {email}!'
 
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     return user_routes.login_user(oauth)
 
@@ -70,7 +70,7 @@ def logout():
 
 @app.route('/authorize')
 def authorize():
-    return user_routes.authorize(oauth)
+    return user_routes.authorize(mongo, oauth)
 
 
 # ------------------------------------------------------------------------
