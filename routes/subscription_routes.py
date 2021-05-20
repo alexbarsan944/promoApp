@@ -19,19 +19,20 @@ def get_subscription(mongo):
             "jwt": str(token),
         }
         user = mapper(res)
-        inserted_id = mongo.db.users.insert_one(user.to_json()).inserted_id
+        inserted_id = mongo.db.keys.insert_one(user.to_json()).inserted_id
         saved_key = KeysEnhanced(user, inserted_id)
         return saved_key
         pass
 
+    print(session)
     store_name = request.json.get('store_name')
     days = request.json.get('days')
     response = {}
-    if store_name != session['user_id']:
+    if store_name != session['store_name']:
         response["Response"] = "Store name and login credentials don't match"
         return json.dumps(response), 400
     if store_name and days:
-        token = encode_auth_token(session['user_id'], days)
+        token = encode_auth_token(session['store_name'], days)
         add_key(token)
         response = {"JWT": token}
     else:

@@ -73,6 +73,43 @@ def authorize():
     return user_routes.authorize(oauth)
 
 
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+""" Discount routes """
+
+
+@app.route('/discounts/<discount_id>', methods=['GET'])
+@require_appkey
+def discount_get(discount_id):
+    return discounts_routes.get_discount(mongo, discount_id)
+
+
+@app.route("/discounts", methods=["POST"])
+@require_appkey
+def discount_create():
+    """Route for creating a metric"""
+    return discounts_routes.create(mongo)
+
+
+@app.route("/discounts/<discount_id>", methods=["DELETE"])
+@require_appkey
+def discount_delete(discount_id):
+    """Route for deleting a metric"""
+    return discounts_routes.delete(discount_id, mongo)
+
+
+@app.route("/discounts/<discount_id>", methods=["PUT"])
+@require_appkey
+def metric_update(discount_id):
+    """Route for updating a metric"""
+    return discounts_routes.update(discount_id, mongo)
+
+
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+""" API for stores """
+
+
 @app.route('/stores/register', methods=['POST'])
 def register_store():
     return store_routes.store_register(mongo)
@@ -81,12 +118,6 @@ def register_store():
 @app.route('/stores/login', methods=['POST'])
 def login_store():
     return store_routes.login_store(mongo)
-
-
-@app.route('/discounts/<discount_id>', methods=['GET'])
-@require_appkey
-def discount_get(discount_id):
-    return discounts_routes.get_discount(mongo, discount_id)
 
 
 @app.route('/stores/<store_id>', methods=['GET'])

@@ -16,7 +16,10 @@ def logout():
 def authorize(oauth):
     google = oauth.create_client('google')  # create the google oauth client
     token = google.authorize_access_token()  # Access token from google (needed to get user info)
+    print(google)
+    print(token)
     resp = google.get('userinfo')
+    print(resp)
     user_info = resp.json()
     user = oauth.google.userinfo()  # uses openid endpoint to fetch user info
     print(user)

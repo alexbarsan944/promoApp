@@ -5,11 +5,11 @@ def store_login_required(func):
     """ Decorator for protected routes """
 
     response = {
-        "redirected": 'To login',
+        "redirected": 'To store login',
     }
 
     def wrapper(*args, **kwargs):
-        if "user_id" not in session:
+        if "store_id" not in session:
             return response  # TODO  use redirect() function here instead of returning response
         return func(*args, **kwargs)
 

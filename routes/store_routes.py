@@ -44,7 +44,8 @@ def login_store(mongo):
     if store_name and password:
         store = mongo.db.stores.find_one({"store_name": store_name})
         if store and verify_password(store['password'], password):
-            session['user_id'] = str(store['store_name'])
+            session['store_id'] = str(store['_id'])
+            session['store_name'] = store['store_name']
             response["success"] = True
             response['response'] = str(store['_id'])
             return json.dumps(response), 200
