@@ -1,0 +1,481 @@
+{
+	"info": {
+		"_postman_id": "606eb1af-584a-4f88-9a1b-8b263f37b860",
+		"name": "promoApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Stores",
+			"item": [
+				{
+					"name": "Register Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"store_name\":\"random_store\",\n    \"email\": \"store@email.com\",\n    \"password\":\"storepw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/stores/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"stores",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Store Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"store_name\":\"random_store\",\n    \"email\": \"store@email.com\",\n    \"password\":\"storepw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/stores/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"stores",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"store_name\": \"lidl\",\n    \"password\": \"lidl\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/stores/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"stores",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Store Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"store_name\": \"lidl\",\n    \"password\": \"lidl\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/stores/login",
+							"protocol": "https",
+							"host": [
+								"cards-app-311715",
+								"ew",
+								"r",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"stores",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get API Key",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"days\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/stores/subscribe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"stores",
+								"subscribe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get API Key Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"days\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/stores/subscribe",
+							"protocol": "https",
+							"host": [
+								"cards-app-311715",
+								"ew",
+								"r",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"stores",
+								"subscribe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Discounts",
+			"item": [
+				{
+					"name": "Add discount",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"gama_produs\": \"Fructe\",\n    \"procent\": \"20\",\n    \"data_expirare\": \"10/10/2021\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/discounts?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjI0OTU4NzksImlhdCI6MTYyMjA2Mzg3OSwic3ViIjoiNjBhZWJhZjE5Mzc5ZGI1ZmFlZjdmYjEyIn0.CIo5FZrSi16HyKyiLtdZvPwgi4NGpaCeIJU4_NcCjXo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"discounts"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjI0OTU4NzksImlhdCI6MTYyMjA2Mzg3OSwic3ViIjoiNjBhZWJhZjE5Mzc5ZGI1ZmFlZjdmYjEyIn0.CIo5FZrSi16HyKyiLtdZvPwgi4NGpaCeIJU4_NcCjXo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get discount",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/discounts/60a264c3c30ce093d6d76d17",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"discounts",
+								"60a264c3c30ce093d6d76d17"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update discount",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"gama_produs\": \"Paine\",\n    \"procent\": \"5\",\n    \"data_expirare\": \"10/10/2021\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/discounts/60a2d68087fa0bd132c42ffb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"discounts",
+								"60a2d68087fa0bd132c42ffb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete discount",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "Delete discount",
+							"host": [
+								"Delete discount"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Alex\",\n    \"email\":\"alexbarsan944@gmail.com\",\n    \"password\": \"pass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[CLOUD] Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Alex\",\n    \"email\":\"alexbarsan944@gmail.com\",\n    \"password\": \"pass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/users/register",
+							"protocol": "https",
+							"host": [
+								"cards-app-311715",
+								"ew",
+								"r",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"alexbarsan944@gmail.com\",\n    \"password\": \"pass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/users/login",
+							"protocol": "https",
+							"host": [
+								"cards-app-311715",
+								"ew",
+								"r",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[CLOUD] Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"alexbarsan944@gmail.com\",\n    \"password\": \"pass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/users/login",
+							"protocol": "https",
+							"host": [
+								"cards-app-311715",
+								"ew",
+								"r",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch discounts from store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/users/lidl",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"lidl"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[CLOUD]Fetch discounts from store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/users/kaufland",
+							"protocol": "https",
+							"host": [
+								"cards-app-311715",
+								"ew",
+								"r",
+								"appspot",
+								"com"
+							],
+							"path": [
+								"users",
+								"kaufland"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
