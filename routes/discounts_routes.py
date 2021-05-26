@@ -9,7 +9,15 @@ from validators import discount_validator
 
 
 def get_discount(mongo, discount_id):
+    response = {
+        "success": False,
+        "response": " "
+    }
+
     discount = mongo.db.discounts.find_one({"_id": ObjectId(discount_id)})
+    if discount is None:
+        response['response'] = "No existing discount"
+        return response, 404
     discount_json = {
         "store_id": discount['store_id'],
         "gama_produs": discount['gama_produs'],

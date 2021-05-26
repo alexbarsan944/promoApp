@@ -1,10 +1,14 @@
 import json
 
+from bson import ObjectId
 from flask import request, session
 
+from mappers.store_mapper import from_json_to_object
 from middleware.generate_jwt import encode_auth_token
 from models.keys import Key
 from models.keys_enhanced import KeysEnhanced
+from models.store_enhanced import StoreEnhanced
+from validators.store_validator import validate
 
 
 def get_subscription(mongo):
@@ -24,18 +28,38 @@ def get_subscription(mongo):
         return saved_key
         pass
 
-    print(session)
-    store_name = request.json.get('store_name')
+    store_name = session['store_name']
     days = request.json.get('days')
+
     response = {}
-    if store_name != session['store_name']:
-        response["Response"] = "Store name and login credentials don't match"
-        return json.dumps(response), 400
+
     if store_name and days:
-        token = encode_auth_token(session['store_name'], days)
+        token = encode_auth_token(session['store_id'], days)
         add_key(token)
-        response = {"JWT": token}
+        store = mongo.db.stores.find_one({"_id": ObjectId(session['store_id'])})
+
+        store_to_update = from_json_to_object(store)
+
+        if store_to_update.to_json()['key'] is not None:
+            response = {
+                "success": False,
+                "response": "You already have a key"
+            }
+            return response, 400
+        if not validate(store_to_update):
+            response = {
+                "success": False,
+                "response": "Invalid store data"
+            }
+            return response, 400
+
+        store_to_update.to_json()['key'] = token
+
+        mongo.db.stores.find_one_and_update({"_id": ObjectId(session['store_id'])},
+                                            {"$set": store_to_update.to_json()})
+
+        updated_store = StoreEnhanced(store_to_update, session['store_id'])
+        return updated_store.to_json()['key'], 200
     else:
-        response["response"] = "store_name or password not entered"
+        response["response"] = "Add a day count"
         return json.dumps(response), 400
-    return json.dumps(response), 200

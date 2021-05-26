@@ -4,23 +4,17 @@ from bson import ObjectId
 from flask import request, session, g
 
 import validators.store_validator as store_validator
+from mappers.store_mapper import from_json_to_object
 from models.store_enhanced import StoreEnhanced
-from models.store import Store
-from utils.password_utils import generate_hash, verify_password
 from utils.json_encoder import encode
+from utils.password_utils import generate_hash, verify_password
 
 
 def store_register(mongo):
     """ [POST] Registration of a store """
 
-    def from_json_to_object(json):
-        username = json["store_name"]
-        password = json["password"]
-        email = json["email"]
-
-        return Store(username, password, email)
-
     request.json["password"] = generate_hash(request.json["password"])
+    request.json["key"] = None
     store = from_json_to_object(request.json)
     if not store_validator.validate(store):
         return "Invalid store data", 400
@@ -47,7 +41,9 @@ def login_store(mongo):
             session['store_id'] = str(store['_id'])
             session['store_name'] = store['store_name']
             response["success"] = True
-            response['response'] = str(store['_id'])
+            response['id'] = str(store['_id'])
+            response['response'] = str(store['key'])
+
             return json.dumps(response), 200
         else:
             response["response"] = "Wrong password"

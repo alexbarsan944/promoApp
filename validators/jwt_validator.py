@@ -12,7 +12,7 @@ def validate_jwt(token):
 
     if exp - iat <= 0:
         return "Expired key", 400
-    if sub != session['store_name']:
+    if sub != session['store_id']:
         return "Key details and logged user don't match.", 400
 
     return "Success", 200

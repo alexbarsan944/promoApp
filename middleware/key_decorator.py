@@ -14,7 +14,6 @@ def require_appkey(view_function):
         if token is None:
             abort(401)
         var = validate_jwt(token)
-
         if token and var[1] == 200:
             return view_function(*args, **kwargs)
         else:

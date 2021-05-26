@@ -15,17 +15,17 @@ def encode(o):
     return JSONEncoder().encode(o)
 
 
-class StoreEnhanced:
-    def __init__(self, store, _id):
+class UserEnhanced:
+    def __init__(self, user, _id):
         self.id = _id
-        self.store = store
+        self.user = user
 
     def to_json(self):
         final_json = {
-            "store": self.store.store_name,
-            "email": self.store.email,
-            "password": self.store.password,
-            "key": self.store.key,
+            "name": self.user.name,
+            "email": self.user.email,
+            "password": self.user.password,
+            "discounts": self.user.discounts,
             "_id": encode(self.id)
         }
 

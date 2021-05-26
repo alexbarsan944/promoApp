@@ -8,7 +8,7 @@ from flask_pymongo import PyMongo
 import routes.discounts_routes as discounts_routes
 import routes.store_routes as store_routes
 import routes.user_routes as user_routes
-from middleware.auth_decorator import google_auth_required
+from middleware.auth_decorator import user_authorization
 from middleware.key_decorator import require_appkey
 from middleware.store_decorator import store_login_required
 from routes.subscription_routes import get_subscription
@@ -43,6 +43,10 @@ google = oauth.register(
     client_kwargs={'scope': 'openid email profile'},
 )
 
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+""" User routes """
+
 
 @app.before_request
 def before_request():
@@ -50,27 +54,33 @@ def before_request():
 
 
 @app.route('/')
-@google_auth_required
+@user_authorization
 def hello_world():
-    email = dict(session)['profile']['email']
-    name = dict(session)['profile']['given_name']
+    email = dict(session)['user_email']['email']
 
-    return f'Hello {name}, you are logged in as {email}!'
+    return f'Hello, you are logged in as {email}!'
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/users/login', methods=['POST', 'GET'])
 def login():
-    return user_routes.login_user(oauth)
+    return user_routes.login_user(mongo)
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/users/register', methods=['POST'])
+def register():
+    return user_routes.register_user(mongo)
+
+
+@app.route('/users/logout', methods=['GET', 'POST'])
+@user_authorization
 def logout():
     return user_routes.logout()
 
 
-@app.route('/authorize')
-def authorize():
-    return user_routes.authorize(mongo, oauth)
+@app.route('/users/<store_name>', methods=['GET'])
+@user_authorization
+def get_discounts_from_store(store_name):
+    return user_routes.get_discounts_from_store(mongo, store_name)
 
 
 # ------------------------------------------------------------------------
@@ -87,27 +97,27 @@ def discount_get(discount_id):
 @app.route("/discounts", methods=["POST"])
 @require_appkey
 def discount_create():
-    """Route for creating a metric"""
+    """Route for creating a discount"""
     return discounts_routes.create(mongo)
 
 
 @app.route("/discounts/<discount_id>", methods=["DELETE"])
 @require_appkey
 def discount_delete(discount_id):
-    """Route for deleting a metric"""
+    """Route for deleting a discount"""
     return discounts_routes.delete(discount_id, mongo)
 
 
 @app.route("/discounts/<discount_id>", methods=["PUT"])
 @require_appkey
-def metric_update(discount_id):
-    """Route for updating a metric"""
+def discount_update(discount_id):
+    """Route for updating a discount"""
     return discounts_routes.update(discount_id, mongo)
 
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-""" API for stores """
+""" Store routes """
 
 
 @app.route('/stores/register', methods=['POST'])
@@ -126,7 +136,7 @@ def get_store(store_id):
     return store_routes.get_store(mongo, store_id)
 
 
-@app.route('/subscriptions', methods=['POST'])
+@app.route('/stores/subscribe', methods=['POST'])
 @store_login_required
 def get_key():
     return get_subscription(mongo)
