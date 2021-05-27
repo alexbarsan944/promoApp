@@ -12,12 +12,26 @@ from utils.password_utils import generate_hash, verify_password
 
 def store_register(mongo):
     """ [POST] Registration of a store """
+    response = {
+        "success": False,
+        "response": " "
+    }
+    email = request.json.get('email')
+
+    store = mongo.db.stores.find_one({"email": email})
+    if store:
+        response['response'] = 'Email already in use.'
+        return json.dumps(response), 400
 
     request.json["password"] = generate_hash(request.json["password"])
     request.json["key"] = None
     store = from_json_to_object(request.json)
     if not store_validator.validate(store):
-        return "Invalid store data", 400
+        response = {
+            "success": False,
+            "response": "Invalid store data"
+        }
+        return response, 400
 
     inserted_id = mongo.db.stores.insert_one(store.to_json()).inserted_id
     saved_user = StoreEnhanced(store, inserted_id)
@@ -28,7 +42,6 @@ def store_register(mongo):
 def login_store(mongo):
     """ [POST] Login with store_name and password """
 
-    session.pop('user_id', None)
     response = {
         "success": False,
         "response": " "
@@ -40,6 +53,7 @@ def login_store(mongo):
         if store and verify_password(store['password'], password):
             session['store_id'] = str(store['_id'])
             session['store_name'] = store['store_name']
+
             response["success"] = True
             response['id'] = str(store['_id'])
             response['response'] = str(store['key'])

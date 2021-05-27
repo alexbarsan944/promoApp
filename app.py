@@ -1,6 +1,5 @@
 import os
 
-from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 from flask import Flask, session
 from flask_cors import CORS
@@ -32,27 +31,11 @@ mongo = PyMongo(app)
 """ CORS config """
 # ------------------------------------------------------------------------
 CORS(app)
-cors = CORS(app, resources={
+cors = CORS(app, supports_credentials=True, resources={
     r"/*": {
         "origins": '*'
     }
 })
-
-# oAuth Setup
-oauth = OAuth(app)
-google = oauth.register(
-    name='google',
-    client_id=os.getenv("GOOGLE_CLIENT_ID"),
-    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    access_token_params=None,
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
-    # This is only needed if using openId to fetch user info
-    client_kwargs={'scope': 'openid email profile'},
-)
 
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------

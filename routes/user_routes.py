@@ -23,10 +23,10 @@ def login_user(mongo):
         if user and verify_password(user['password'], password):
             session['user_id'] = str(user['_id'])
             session['user_email'] = user['email']
-
             response["success"] = True
             response["response"] = str(user["_id"])
             response["discounts"] = user['discounts']
+
             return json.dumps(response), 200
         else:
             response["response"] = "Wrong email or password"
@@ -44,16 +44,26 @@ def logout():
 
 
 def register_user(mongo):
+    response = {
+        "success": False,
+        "response": " "
+    }
     email = request.json.get('email')
 
     user = mongo.db.users.find_one({"email": email})
     if user:
-        return "Email already in use.", 400
+        response['response'] = 'Email already in use.'
+        return json.dumps(response), 400
+
     request.json["password"] = generate_hash(request.json["password"])
     request.json["discounts"] = []
     user = user_mapper.from_json_to_object(request.json)
     if not user_validator.validate(user):
-        return "Invalid user data", 400
+        response = {
+            "success": False,
+            "response": "Invalid user data"
+        }
+        return response, 400
 
     inserted_id = mongo.db.users.insert_one(user.to_json()).inserted_id
     saved_user = UserEnhanced(user, inserted_id)

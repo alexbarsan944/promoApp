@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, request, make_response
 
 
 def store_login_required(func):
