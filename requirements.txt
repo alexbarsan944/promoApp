@@ -25,3 +25,4 @@ Flask-PyMongo
 Bcrypt-Flask
 pymongo~=3.11.4
 PyJWT~=2.1.0
+flask_cors

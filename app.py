@@ -3,6 +3,7 @@ import os
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 from flask import Flask, session
+from flask_cors import CORS
 from flask_pymongo import PyMongo
 
 import routes.discounts_routes as discounts_routes
@@ -26,6 +27,16 @@ app.config.from_pyfile('config.py')
 """ Mongo config """
 # ------------------------------------------------------------------------
 mongo = PyMongo(app)
+
+# ------------------------------------------------------------------------
+""" CORS config """
+# ------------------------------------------------------------------------
+CORS(app)
+cors = CORS(app, resources={
+    r"/*": {
+        "origins": '*'
+    }
+})
 
 # oAuth Setup
 oauth = OAuth(app)
