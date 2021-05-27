@@ -1,6 +1,5 @@
 import json
 
-from bson import ObjectId
 from flask import session, redirect, request
 
 import mappers.user_mapper as user_mapper
@@ -26,7 +25,8 @@ def login_user(mongo):
             session['user_email'] = user['email']
 
             response["success"] = True
-            response["response"] = user["_id"]
+            response["response"] = str(user["_id"])
+            response["discounts"] = user['discounts']
             return json.dumps(response), 200
         else:
             response["response"] = "Wrong email or password"
@@ -67,7 +67,11 @@ def get_discounts_from_store(mongo, store_name):
         user_id = user['_id']
         user_to_update = user_mapper.from_json_to_object(user)
 
-        user_to_update.to_json()['discounts'] = discounts_array
+        if user_to_update.to_json()['discounts'] is not None:
+            for item in discounts_array:
+                user_to_update.to_json()['discounts'].append(item)
+        else:
+            user_to_update.to_json()['discounts'] = discounts_array
 
         mongo.db.users.find_one_and_update({"_id": user_id},
                                            {"$set": user_to_update.to_json()})
@@ -97,7 +101,8 @@ def get_discounts_from_store(mongo, store_name):
         discounts_to_send.append({
             "store_name": store_name,
             "gama_produs": discount['gama_produs'],
-            "procent": discount['procent']
+            "procent": discount['procent'],
+            'data_expirare': discount['data_expirare']
         })
 
     if 'user_email' not in session or 'user_id' not in session:
