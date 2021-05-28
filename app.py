@@ -114,6 +114,11 @@ def discount_update(discount_id):
 """ Store routes """
 
 
+@app.route('/stores', methods=['GET'])
+def get_stores():
+    return store_routes.get_all_stores(mongo)
+
+
 @app.route('/stores/register', methods=['POST'])
 def register_store():
     return store_routes.store_register(mongo)

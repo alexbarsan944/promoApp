@@ -84,3 +84,14 @@ def get_store(mongo, store_id):
     }
     store_json["_id"] = store_json["_id"][1:-1]
     return store_json
+
+
+def get_all_stores(mongo):
+    store_doc = mongo.db.stores.find()
+    store_json = {}
+    for store in store_doc:
+        store_json[encode(store['_id'])[1:-1]] = {
+            "store_name": store['store_name'],
+            'email': store['email']
+        }
+    return json.dumps(store_json)

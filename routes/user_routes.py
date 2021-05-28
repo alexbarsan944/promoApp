@@ -78,6 +78,8 @@ def get_discounts_from_store(mongo, store_name):
         user_to_update = user_mapper.from_json_to_object(user)
 
         if user_to_update.to_json()['discounts'] is not None:
+            user_to_update.to_json()['discounts'] = list(
+                filter(lambda x: not x['store_name'] == store_name, user_to_update.to_json()['discounts']))
             for item in discounts_array:
                 user_to_update.to_json()['discounts'].append(item)
         else:
@@ -107,6 +109,7 @@ def get_discounts_from_store(mongo, store_name):
         }
         return response, 404
     discounts_to_send = []
+
     for discount in discounts:
         discounts_to_send.append({
             "store_name": store_name,
