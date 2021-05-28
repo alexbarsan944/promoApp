@@ -115,6 +115,7 @@ def discount_update(discount_id):
 
 
 @app.route('/stores', methods=['GET'])
+@store_login_required
 def get_stores():
     return store_routes.get_all_stores(mongo)
 
