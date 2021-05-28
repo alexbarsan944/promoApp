@@ -60,6 +60,12 @@ def login():
     return user_routes.login_user(mongo)
 
 
+@app.route('/users/<user_id>/discounts', methods=['GET'])
+@user_authorization
+def get_user_discounts(user_id):
+    return user_routes.get_user_disc(mongo, user_id)
+
+
 @app.route('/users/register', methods=['POST'])
 def register():
     return user_routes.register_user(mongo)
@@ -114,10 +120,19 @@ def discount_update(discount_id):
 """ Store routes """
 
 
+# GET stores/{store_id}/discounts care returneaza toate discount-urile unui store
+
+
 @app.route('/stores', methods=['GET'])
 @store_login_required
 def get_stores():
     return store_routes.get_all_stores(mongo)
+
+
+@app.route('/stores/<store_id>/discounts', methods=['GET'])
+@store_login_required
+def get_store_discounts(store_id):
+    return store_routes.get_store_discounts(mongo, store_id)
 
 
 @app.route('/stores/register', methods=['POST'])

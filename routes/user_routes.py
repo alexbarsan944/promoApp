@@ -1,10 +1,12 @@
 import json
 
+from bson import ObjectId
 from flask import session, redirect, request
 
 import mappers.user_mapper as user_mapper
 import validators.user_validator as user_validator
 from models.users_enhanced import UserEnhanced
+from utils.json_encoder import encode
 from utils.password_utils import generate_hash, verify_password
 
 
@@ -73,6 +75,8 @@ def register_user(mongo):
 
 def get_discounts_from_store(mongo, store_name):
     def update(email, discounts_array):
+        # disc = mongo.db.discounts.find(discounts_array)
+        # print(disc)
         user = mongo.db.users.find_one({"email": email})
         user_id = user['_id']
         user_to_update = user_mapper.from_json_to_object(user)
@@ -112,6 +116,7 @@ def get_discounts_from_store(mongo, store_name):
 
     for discount in discounts:
         discounts_to_send.append({
+            'discount_id': encode(discount['_id'])[1:-1],
             "store_name": store_name,
             "gama_produs": discount['gama_produs'],
             "procent": discount['procent'],
@@ -130,3 +135,17 @@ def get_discounts_from_store(mongo, store_name):
 
     update(email, discounts_to_send)
     return json.dumps(discounts_to_send), 200
+
+
+def get_user_disc(mongo, user_id):
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    disc_objs = {}
+    response = {
+        "success": False,
+        "response": " "
+    }
+    if not user:
+        response['response'] = "No user with the specified ID."
+        return response, 404
+
+    return json.dumps(user['discounts'])

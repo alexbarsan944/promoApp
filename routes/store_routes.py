@@ -17,10 +17,12 @@ def store_register(mongo):
         "response": " "
     }
     email = request.json.get('email')
+    store_name = request.json.get('store_name')
 
     store = mongo.db.stores.find_one({"email": email})
-    if store:
-        response['response'] = 'Email already in use.'
+    name = mongo.db.stores.find_one({"store_name": store_name})
+    if store or name:
+        response['response'] = 'Email or store name already in use.'
         return json.dumps(response), 400
 
     request.json["password"] = generate_hash(request.json["password"])
@@ -78,6 +80,14 @@ def before_req_func():
 
 def get_store(mongo, store_id):
     store_doc = mongo.db.stores.find_one({"_id": ObjectId(store_id)})
+    response = {
+        "success": False,
+        "response": " "
+    }
+    if not store_doc:
+        response['response'] = "No stores with the specified id."
+        return response, 404
+
     store_json = {
         "store_name": store_doc['store_name'],
         "_id": encode(store_doc['_id'])
@@ -88,6 +98,14 @@ def get_store(mongo, store_id):
 
 def get_all_stores(mongo):
     store_doc = mongo.db.stores.find()
+    response = {
+        "success": False,
+        "response": " "
+    }
+    if not store_doc:
+        response['response'] = "No stores available."
+        return response, 404
+
     store_json = {}
     for store in store_doc:
         store_json[encode(store['_id'])[1:-1]] = {
@@ -95,3 +113,28 @@ def get_all_stores(mongo):
             'email': store['email']
         }
     return json.dumps(store_json)
+
+
+def get_store_discounts(mongo, store_id):
+    discounts_doc = mongo.db.discounts.find()
+    discount_json = {}
+    response = {
+        "success": False,
+        "response": " "
+    }
+    if not discounts_doc:
+        response['response'] = "No discounts at the moment."
+        return response, 404
+
+    for discount in discounts_doc:
+        id = encode(discount['store_id'])[1:-1]
+        if id == store_id:
+            discount_json = {
+                '_id': encode(discount['_id'])[1:-1],
+                'store_id': store_id,
+                'data_expirare': discount['data_expirare'],
+                'procent': discount['procent'],
+                'gama_produs': discount['gama_produs']
+            }
+
+    return discount_json
