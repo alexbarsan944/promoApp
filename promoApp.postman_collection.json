@@ -38,7 +38,7 @@
 					"response": []
 				},
 				{
-					"name": "Register Store Copy",
+					"name": "[CLOUD] Register Store",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -73,7 +73,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"store_name\": \"lidl\",\n    \"password\": \"lidl\"\n}",
+							"raw": "{\n    \"email\": \"lidl@email.com\",\n    \"password\": \"lidl\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -96,7 +96,7 @@
 					"response": []
 				},
 				{
-					"name": "Login Store Copy",
+					"name": "[CLOUD]  Login Store",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -157,7 +157,7 @@
 					"response": []
 				},
 				{
-					"name": "Get API Key Copy",
+					"name": "[CLOUD]  Get API Key",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -189,11 +189,49 @@
 					"response": []
 				},
 				{
-					"name": "GET Store",
+					"name": "Get all stores",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": null
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:5000/stores",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"stores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get discounts of a store",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/stores/60aeb5ee88d68967605b88e9/discounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"stores",
+								"60aeb5ee88d68967605b88e9",
+								"discounts"
+							]
+						}
 					},
 					"response": []
 				}
@@ -210,6 +248,40 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"gama_produs\": \"Fructe\",\n    \"procent\": \"20\",\n    \"data_expirare\": \"10/10/2021\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/discounts?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjI0OTU4NzksImlhdCI6MTYyMjA2Mzg3OSwic3ViIjoiNjBhZWJhZjE5Mzc5ZGI1ZmFlZjdmYjEyIn0.CIo5FZrSi16HyKyiLtdZvPwgi4NGpaCeIJU4_NcCjXo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"discounts"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjI0OTU4NzksImlhdCI6MTYyMjA2Mzg3OSwic3ViIjoiNjBhZWJhZjE5Mzc5ZGI1ZmFlZjdmYjEyIn0.CIo5FZrSi16HyKyiLtdZvPwgi4NGpaCeIJU4_NcCjXo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add discount Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"gama_produs\": \"Lapte\",\n    \"procent\": \"30\",\n    \"data_expirare\": \"10/10/2021\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -291,9 +363,21 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "Delete discount",
+							"raw": "http://localhost:5000/discounts/60a6448ef09da864c5b999f0?key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjE5NDIyMDcsImlhdCI6MTYyMTUxMDIwNywic3ViIjoicmFuZG9tX3N0b3JlIn0.4nKyRnygAhJ5c_D6GN8yu8r-g8t5dGGXdT7XuM4ne2A",
+							"protocol": "http",
 							"host": [
-								"Delete discount"
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"discounts",
+								"60a6448ef09da864c5b999f0"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjE5NDIyMDcsImlhdCI6MTYyMTUxMDIwNywic3ViIjoicmFuZG9tX3N0b3JlIn0.4nKyRnygAhJ5c_D6GN8yu8r-g8t5dGGXdT7XuM4ne2A"
+								}
 							]
 						}
 					},
@@ -367,11 +451,8 @@
 				},
 				{
 					"name": "Login",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -383,15 +464,12 @@
 							}
 						},
 						"url": {
-							"raw": "https://cards-app-311715.ew.r.appspot.com/users/login",
-							"protocol": "https",
+							"raw": "http://localhost:5000/users/login",
+							"protocol": "http",
 							"host": [
-								"cards-app-311715",
-								"ew",
-								"r",
-								"appspot",
-								"com"
+								"localhost"
 							],
+							"port": "5000",
 							"path": [
 								"users",
 								"login"
@@ -435,7 +513,7 @@
 				{
 					"name": "Fetch discounts from store",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:5000/users/lidl",
@@ -453,12 +531,33 @@
 					"response": []
 				},
 				{
-					"name": "[CLOUD]Fetch discounts from store",
+					"name": "Get discounts from user",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://cards-app-311715.ew.r.appspot.com/users/kaufland",
+							"raw": "http://localhost:5000/users/60aebc00075d17e288889081/discounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"users",
+								"60aebc00075d17e288889081",
+								"discounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[CLOUD]Fetch discounts from store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://cards-app-311715.ew.r.appspot.com/users/lidl",
 							"protocol": "https",
 							"host": [
 								"cards-app-311715",
@@ -469,7 +568,7 @@
 							],
 							"path": [
 								"users",
-								"kaufland"
+								"lidl"
 							]
 						}
 					},

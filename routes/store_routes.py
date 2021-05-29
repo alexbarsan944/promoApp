@@ -48,10 +48,10 @@ def login_store(mongo):
         "success": False,
         "response": " "
     }
-    store_name = request.json.get('store_name')
+    email = request.json.get('email')
     password = request.json.get('password')
-    if store_name and password:
-        store = mongo.db.stores.find_one({"store_name": store_name})
+    if email and password:
+        store = mongo.db.stores.find_one({"email": email})
         if store and verify_password(store['password'], password):
             session['store_id'] = str(store['_id'])
             session['store_name'] = store['store_name']
@@ -65,7 +65,7 @@ def login_store(mongo):
             response["response"] = "Wrong password"
             return json.dumps(response), 400
     else:
-        response["response"] = "store_name or password not entered"
+        response["response"] = "Email or password not entered."
         return json.dumps(response), 400
     pass
 

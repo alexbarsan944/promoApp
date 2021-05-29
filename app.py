@@ -77,7 +77,7 @@ def logout():
     return user_routes.logout()
 
 
-@app.route('/users/<store_name>', methods=['GET'])
+@app.route('/users/<store_name>', methods=['POST'])
 @user_authorization
 def get_discounts_from_store(store_name):
     return user_routes.get_discounts_from_store(mongo, store_name)
