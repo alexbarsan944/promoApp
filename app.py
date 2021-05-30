@@ -1,7 +1,9 @@
 import os
+from datetime import timedelta
 
 from dotenv import load_dotenv
 from flask import Flask, session
+from flask.sessions import SecureCookieSessionInterface
 from flask_cors import CORS
 from flask_pymongo import PyMongo
 
@@ -21,7 +23,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config.from_object('config')
 app.config.from_pyfile('config.py')
-
+app.permanent_session_lifetime = timedelta(days=5)
 # ------------------------------------------------------------------------
 """ Mongo config """
 # ------------------------------------------------------------------------
@@ -41,10 +43,15 @@ cors = CORS(app, supports_credentials=True, resources={
 # ------------------------------------------------------------------------
 """ User routes """
 
+session_cookie = SecureCookieSessionInterface().get_signing_serializer(app)
 
-@app.before_request
-def before_request():
-    return store_routes.before_req_func()
+
+@app.after_request
+def cookies(response):
+    session.permanent = True
+    same_cookie = session_cookie.dumps(dict(session))
+    response.headers.add("Set-Cookie", f"session={same_cookie}; Secure; HttpOnly; Expires=None; SameSite=None; Path=/;")
+    return response
 
 
 @app.route('/')
@@ -124,7 +131,7 @@ def discount_update(discount_id):
 
 
 @app.route('/stores', methods=['GET'])
-@store_login_required
+@user_authorization
 def get_stores():
     return store_routes.get_all_stores(mongo)
 

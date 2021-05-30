@@ -1,4 +1,4 @@
-from flask import session, request, make_response
+from flask import session
 
 
 def store_login_required(func):
@@ -7,7 +7,6 @@ def store_login_required(func):
     response = {
         "redirected": 'To store login',
     }
-
     def wrapper(*args, **kwargs):
         if "store_id" not in session:
             return response  # TODO  use redirect() function here instead of returning response

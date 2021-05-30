@@ -21,12 +21,20 @@ def login_user(mongo):
 
     if email and password:
         user = mongo.db.users.find_one({"email": email})
-        print(user)
         if user and verify_password(user['password'], password):
+            session.permanent = True
             session['user_id'] = str(user['_id'])
             session['user_email'] = user['email']
             response["success"] = True
             response["response"] = str(user["_id"])
+
+            store_name_set = set()
+            for idx, discount in enumerate(user['discounts']):
+                store_name_set.add(discount['store_name'])
+
+            for store in store_name_set:
+                get_discounts_from_store(mongo, store)  # get new discounts
+
             response["discounts"] = user['discounts']
 
             return json.dumps(response), 200
@@ -139,7 +147,6 @@ def get_discounts_from_store(mongo, store_name):
 
 def get_user_disc(mongo, user_id):
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
-    disc_objs = {}
     response = {
         "success": False,
         "response": " "

@@ -1,7 +1,7 @@
 import json
 
 from bson import ObjectId
-from flask import request, session, g
+from flask import request, session
 
 import validators.store_validator as store_validator
 from mappers.store_mapper import from_json_to_object
@@ -53,9 +53,9 @@ def login_store(mongo):
     if email and password:
         store = mongo.db.stores.find_one({"email": email})
         if store and verify_password(store['password'], password):
+            session.permanent = True
             session['store_id'] = str(store['_id'])
             session['store_name'] = store['store_name']
-
             response["success"] = True
             response['id'] = str(store['_id'])
             response['response'] = str(store['key'])
@@ -68,14 +68,6 @@ def login_store(mongo):
         response["response"] = "Email or password not entered."
         return json.dumps(response), 400
     pass
-
-
-def before_req_func():
-    """ before_request function """
-
-    g.user = None
-    if 'user_id' in session:
-        g.user = session['user_id']
 
 
 def get_store(mongo, store_id):
@@ -129,12 +121,12 @@ def get_store_discounts(mongo, store_id):
     for discount in discounts_doc:
         id = encode(discount['store_id'])[1:-1]
         if id == store_id:
-            discount_json = {
-                '_id': encode(discount['_id'])[1:-1],
-                'store_id': store_id,
-                'data_expirare': discount['data_expirare'],
-                'procent': discount['procent'],
-                'gama_produs': discount['gama_produs']
-            }
+            discount_json[encode(discount['_id'])[1:-1]] = \
+                {
+                    'store_id': store_id,
+                    'data_expirare': discount['data_expirare'],
+                    'procent': discount['procent'],
+                    'gama_produs': discount['gama_produs']
+                }
 
     return discount_json
