@@ -40,12 +40,6 @@ def get_subscription(mongo):
 
         store_to_update = from_json_to_object(store)
 
-        if store_to_update.to_json()['key'] is not None:
-            response = {
-                "success": False,
-                "response": "You already have a key"
-            }
-            return response, 400
         if not validate(store_to_update):
             response = {
                 "success": False,

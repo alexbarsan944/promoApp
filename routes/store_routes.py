@@ -34,9 +34,12 @@ def store_register(mongo):
             "response": "Invalid store data"
         }
         return response, 400
-
+    session.permanent = True
     inserted_id = mongo.db.stores.insert_one(store.to_json()).inserted_id
     saved_user = StoreEnhanced(store, inserted_id)
+
+    session['store_id'] = str(inserted_id)
+    session['store_name'] = saved_user.to_json()['store']
 
     return saved_user.to_json(), 201
 
@@ -56,6 +59,7 @@ def login_store(mongo):
             session.permanent = True
             session['store_id'] = str(store['_id'])
             session['store_name'] = store['store_name']
+
             response["success"] = True
             response['id'] = str(store['_id'])
             response['response'] = str(store['key'])

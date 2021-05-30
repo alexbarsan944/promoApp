@@ -35,6 +35,7 @@ def login_user(mongo):
             for store in store_name_set:
                 get_discounts_from_store(mongo, store)  # get new discounts
 
+            user = mongo.db.users.find_one({"email": email})
             response["discounts"] = user['discounts']
 
             return json.dumps(response), 200
