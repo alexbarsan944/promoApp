@@ -12,7 +12,7 @@ from validators.store_validator import validate
 
 
 def get_subscription(mongo):
-    """ [GET] request for a protected route """
+    """ [POST] Request a key to use protected routes """
 
     def mapper(json):
         jwt = json["jwt"]

@@ -23,6 +23,8 @@ app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config.from_object('config')
 app.config.from_pyfile('config.py')
+
+session_cookie = SecureCookieSessionInterface().get_signing_serializer(app)
 app.permanent_session_lifetime = timedelta(days=5)
 # ------------------------------------------------------------------------
 """ Mongo config """
@@ -38,12 +40,9 @@ cors = CORS(app, supports_credentials=True, resources={
         "origins": '*'
     }
 })
-
 # ------------------------------------------------------------------------
 # ------------------------------------------------------------------------
-""" User routes """
-
-session_cookie = SecureCookieSessionInterface().get_signing_serializer(app)
+""" Cookie route """
 
 
 @app.after_request
@@ -54,34 +53,26 @@ def cookies(response):
     return response
 
 
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+""" User routes """
+
+
 @app.route('/')
 @user_authorization
 def hello_world():
     email = dict(session)['user_email']['email']
-
     return f'Hello, you are logged in as {email}!'
-
-
-@app.route('/users/login', methods=['POST', 'GET'])
-def login():
-    return user_routes.login_user(mongo)
-
-
-@app.route('/users/<user_id>/stores/<store_id>', methods=['DELETE'])
-@user_authorization
-def remove_user_discounts(user_id, store_id):
-    return user_routes.remove_user_store_discounts(mongo, user_id, store_id)
-
-
-@app.route('/users/<user_id>/discounts', methods=['GET'])
-@user_authorization
-def get_user_discounts(user_id):
-    return user_routes.get_user_disc(mongo, user_id)
 
 
 @app.route('/users/register', methods=['POST'])
 def register():
     return user_routes.register_user(mongo)
+
+
+@app.route('/users/login', methods=['POST', 'GET'])
+def login():
+    return user_routes.login_user(mongo)
 
 
 @app.route('/users/logout', methods=['GET', 'POST'])
@@ -90,10 +81,22 @@ def logout():
     return user_routes.logout()
 
 
+@app.route('/users/<user_id>/discounts', methods=['GET'])
+@user_authorization
+def get_user_discounts(user_id):
+    return user_routes.get_user_disc(mongo, user_id)
+
+
 @app.route('/users/<store_name>', methods=['POST'])
 @user_authorization
 def get_discounts_from_store(store_name):
     return user_routes.get_discounts_from_store(mongo, store_name)
+
+
+@app.route('/users/<user_id>/stores/<store_id>', methods=['DELETE'])
+@user_authorization
+def remove_user_discounts(user_id, store_id):
+    return user_routes.remove_user_store_discounts(mongo, user_id, store_id)
 
 
 # ------------------------------------------------------------------------
@@ -133,34 +136,36 @@ def discount_update(discount_id):
 """ Store routes """
 
 
-# GET stores/{store_id}/discounts care returneaza toate discount-urile unui store
-
-
 @app.route('/stores', methods=['GET'])
 @user_authorization
 def get_stores():
+    """ [GET] Return all available stores """
     return store_routes.get_all_stores(mongo)
 
 
 @app.route('/stores/<store_id>/discounts', methods=['GET'])
 @store_login_required
 def get_store_discounts(store_id):
+    """ [GET] Return all the discounts that are associated with a store """
     return store_routes.get_store_discounts(mongo, store_id)
 
 
 @app.route('/stores/register', methods=['POST'])
 def register_store():
+    """ [POST] Register route for stores """
     return store_routes.store_register(mongo)
 
 
 @app.route('/stores/login', methods=['POST'])
 def login_store():
+    """ [POST] Login route for stores """
     return store_routes.login_store(mongo)
 
 
 @app.route('/stores/<store_id>', methods=['GET'])
 @store_login_required
 def get_store(store_id):
+    """ [GET] Return a single store from ID """
     return store_routes.get_store(mongo, store_id)
 
 

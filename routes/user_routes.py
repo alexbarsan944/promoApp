@@ -83,7 +83,11 @@ def register_user(mongo):
 
 
 def get_discounts_from_store(mongo, store_name):
+    """ [POST] Get all the discounts form <store_name> and append to user object"""
+
     def update(email, discounts_array):
+        """ Update the user with the new discounts from store """
+
         user = mongo.db.users.find_one({"email": email})
         user_id = user['_id']
         user_to_update = user_mapper.from_json_to_object(user)
@@ -137,7 +141,6 @@ def get_discounts_from_store(mongo, store_name):
         }
         return response, 404
 
-    print(session)
     email = dict(session)['user_email']
 
     update(email, discounts_to_send)
@@ -145,6 +148,8 @@ def get_discounts_from_store(mongo, store_name):
 
 
 def get_user_disc(mongo, user_id):
+    """ [GET] Returns the discounts of a <user_id> """
+
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     response = {
         "success": False,
@@ -158,10 +163,10 @@ def get_user_disc(mongo, user_id):
 
 
 def remove_user_store_discounts(mongo, user_id, store_id):
+    """ [DELETE] Remove all the discounts from a user that are asociated with a store """
+
     user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
     store = mongo.db.stores.find_one({"_id": ObjectId(store_id)})
-    print(user)
-    print(store)
     response = {
         "success": False,
         "response": " "
@@ -190,6 +195,7 @@ def remove_user_store_discounts(mongo, user_id, store_id):
     mongo.db.users.find_one_and_update({"_id": ObjectId(user_id)},
                                        {"$set": user_to_update.to_json()})
 
-    updated_user = UserEnhanced(user_to_update, user_id)
+    response['response'] = 'Deleted successfully.'
+    response['success'] = True
 
-    return updated_user.to_json(), 200
+    return response, 200

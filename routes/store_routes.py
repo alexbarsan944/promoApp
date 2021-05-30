@@ -12,6 +12,7 @@ from utils.password_utils import generate_hash, verify_password
 
 def store_register(mongo):
     """ [POST] Registration of a store """
+
     response = {
         "success": False,
         "response": " "
@@ -75,6 +76,8 @@ def login_store(mongo):
 
 
 def get_store(mongo, store_id):
+    """ [GET] Return a single store from ID """
+
     store_doc = mongo.db.stores.find_one({"_id": ObjectId(store_id)})
     response = {
         "success": False,
@@ -89,10 +92,12 @@ def get_store(mongo, store_id):
         "_id": encode(store_doc['_id'])
     }
     store_json["_id"] = store_json["_id"][1:-1]
-    return store_json
+    return store_json, 200
 
 
 def get_all_stores(mongo):
+    """ [GET] Return all available stores """
+
     store_doc = mongo.db.stores.find()
     response = {
         "success": False,
@@ -108,10 +113,12 @@ def get_all_stores(mongo):
             "store_name": store['store_name'],
             'email': store['email']
         }
-    return json.dumps(store_json)
+    return json.dumps(store_json), 200
 
 
 def get_store_discounts(mongo, store_id):
+    """ [GET] Return all the discounts that are associated with a store """
+
     discounts_doc = mongo.db.discounts.find()
     discount_json = {}
     response = {
@@ -133,4 +140,4 @@ def get_store_discounts(mongo, store_id):
                     'gama_produs': discount['gama_produs']
                 }
 
-    return discount_json
+    return discount_json, 200
