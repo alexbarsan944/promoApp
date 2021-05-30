@@ -1,0 +1,417 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: promoApp
+  contact: {}
+host: cards-app-311715.ew.r.appspot.com
+basePath: /
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /stores/register:
+    post:
+      summary: '[CLOUD] Register Store'
+      tags:
+      - Stores
+      operationId: '[CLOUD]RegisterStore'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DRegisterStoreRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /stores/login:
+    post:
+      summary: '[CLOUD]  Login Store'
+      tags:
+      - Stores
+      operationId: '[CLOUD]LoginStore'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DLoginStoreRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /stores/subscribe:
+    post:
+      summary: '[CLOUD]  Get API Key'
+      tags:
+      - Stores
+      operationId: '[CLOUD]GetAPIKey'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DGetAPIKeyRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /stores/{store_id}/discounts:
+    get:
+      summary: '[CLOUD] Get discounts of a store'
+      tags:
+      - Stores
+      operationId: '[CLOUD]Getdiscountsofastore'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: "store_id"
+        in: "path"
+        description: "ID of store"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /stores:
+    get:
+      summary: '[CLOUD] Get all stores'
+      tags:
+      - Stores
+      operationId: '[CLOUD]Getallstores'
+      deprecated: false
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+
+  /discounts:
+    post:
+      summary: '[CLOUD] Add discount'
+      tags:
+      - Discounts
+      operationId: '[CLOUD]Adddiscount'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: key
+        in: query
+        required: true
+        type: string
+        description: ''
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DAdddiscountRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /discounts/{discount_id}:
+    put:
+      summary: '[CLOUD] Update discount'
+      tags:
+      - Discounts
+      operationId: '[CLOUD]Updatediscount'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: "discount_id"
+        in: "path"
+        description: "ID of discount"
+        required: true
+        type: "string"
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DUpdatediscountRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+    get:
+      summary: '[CLOUD] Get discount'
+      tags:
+      - Discounts
+      operationId: '[CLOUD]Getdiscount'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: "discount_id"
+        in: "path"
+        description: "ID of discount"
+        required: true
+        type: "string"
+      - name: key
+        in: query
+        required: true
+        type: string
+        description: ''
+      responses:
+        '200':
+          description: ''
+          headers: {}
+    delete:
+      summary: '[CLOUD] Delete discount'
+      tags:
+      - Discounts
+      operationId: '[CLOUD]Deletediscount'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: "discount_id"
+        in: "path"
+        description: "ID of discount"
+        required: true
+        type: "string"
+      - name: key
+        in: query
+        required: true
+        type: string
+        description: ''
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /users/register:
+    post:
+      summary: '[CLOUD] Register User'
+      tags:
+      - Users
+      operationId: '[CLOUD]RegisterUser'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DRegisterUserRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /users/login:
+    post:
+      summary: '[CLOUD] Login'
+      tags:
+      - Users
+      operationId: '[CLOUD]Login'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/%5BCLOUD%5DLoginRequest'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /users/kaufland:
+    post:
+      summary: '[CLOUD] Fetch discounts from store'
+      tags:
+      - Users
+      operationId: '[CLOUD]Fetchdiscountsfromstore'
+      deprecated: false
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /users/{user_id}/discounts:
+    get:
+      summary: '[CLOUD] Get discounts from user'
+      tags:
+      - Users
+      operationId: '[CLOUD]Getdiscountsfromuser'
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "ID of user"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: ''
+          headers: {}
+  /users/{user_id}/stores/{store_id}:
+    delete:
+      summary: "[CLOUD] Delete user's discounts from a specific store"
+      tags:
+      - Users
+      operationId: "[CLOUD]Deleteuser'sdiscountsfromaspecificstore"
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: "user_id"
+        in: "path"
+        description: "ID of user"
+        required: true
+        type: "string"
+      - name: "store_id"
+        in: "path"
+        description: "ID of store"
+        required: true
+        type: "string"
+      responses:
+        '200':
+          description: ''
+          headers: {}
+definitions:
+  '[CLOUD]RegisterStoreRequest':
+    title: '[CLOUD]RegisterStoreRequest'
+    example:
+      store_name: kik
+      email: kik@email.com
+      password: pass
+    type: object
+    properties:
+      store_name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - store_name
+    - email
+    - password
+  '[CLOUD]LoginStoreRequest':
+    title: '[CLOUD]LoginStoreRequest'
+    example:
+      email: kik@email.com
+      password: pass
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+  '[CLOUD]GetAPIKeyRequest':
+    title: '[CLOUD]GetAPIKeyRequest'
+    example:
+      days: 5
+    type: object
+    properties:
+      days:
+        type: integer
+        format: int32
+    required:
+    - days
+  '[CLOUD]AdddiscountRequest':
+    title: '[CLOUD]AdddiscountRequest'
+    example:
+      gama_produs: Dulciuri
+      procent: '50'
+      data_expirare: 10/10/2021
+    type: object
+    properties:
+      gama_produs:
+        type: string
+      procent:
+        type: string
+      data_expirare:
+        type: string
+    required:
+    - gama_produs
+    - procent
+    - data_expirare
+  '[CLOUD]UpdatediscountRequest':
+    title: '[CLOUD]UpdatediscountRequest'
+    example:
+      gama_produs: Dulciuri
+      procent: '5'
+      data_expirare: 10/10/2021
+    type: object
+    properties:
+      gama_produs:
+        type: string
+      procent:
+        type: string
+      data_expirare:
+        type: string
+    required:
+    - gama_produs
+    - procent
+    - data_expirare
+  '[CLOUD]RegisterUserRequest':
+    title: '[CLOUD]RegisterUserRequest'
+    example:
+      name: Alex
+      email: alexbarsan944@gmail.com
+      password: pass
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - name
+    - email
+    - password
+  '[CLOUD]LoginRequest':
+    title: '[CLOUD]LoginRequest'
+    example:
+      email: alexbarsan944@gmail.com
+      password: pass
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+tags:
+- name: Stores
+- name: Discounts
+- name: Users
