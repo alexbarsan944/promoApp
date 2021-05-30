@@ -67,6 +67,12 @@ def login():
     return user_routes.login_user(mongo)
 
 
+@app.route('/users/<user_id>/stores/<store_id>', methods=['DELETE'])
+@user_authorization
+def remove_user_discounts(user_id, store_id):
+    return user_routes.remove_user_store_discounts(mongo, user_id, store_id)
+
+
 @app.route('/users/<user_id>/discounts', methods=['GET'])
 @user_authorization
 def get_user_discounts(user_id):

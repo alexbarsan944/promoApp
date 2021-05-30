@@ -83,8 +83,6 @@ def register_user(mongo):
 
 def get_discounts_from_store(mongo, store_name):
     def update(email, discounts_array):
-        # disc = mongo.db.discounts.find(discounts_array)
-        # print(disc)
         user = mongo.db.users.find_one({"email": email})
         user_id = user['_id']
         user_to_update = user_mapper.from_json_to_object(user)
@@ -156,3 +154,41 @@ def get_user_disc(mongo, user_id):
         return response, 404
 
     return json.dumps(user['discounts'])
+
+
+def remove_user_store_discounts(mongo, user_id, store_id):
+    user = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    store = mongo.db.stores.find_one({"_id": ObjectId(store_id)})
+    print(user)
+    print(store)
+    response = {
+        "success": False,
+        "response": " "
+    }
+
+    if not user:
+        response['response'] = 'No existing user with that ID.'
+        return response, 404
+    if not store:
+        response['response'] = 'No existing store with that ID.'
+        return response, 404
+
+    user_to_update = user_mapper.from_json_to_object(user)
+    store_name = store['store_name']
+    discounts_to_update = user_to_update.to_json()['discounts']
+
+    if discounts_to_update is not None:
+        discounts_to_update = list(
+            filter(lambda x: not x['store_name'] == store_name, user_to_update.to_json()['discounts']))
+    else:
+        response['response'] = 'User is not subscribed to this store.'
+        return response, 400
+
+    user_to_update.to_json()['discounts'] = discounts_to_update
+
+    mongo.db.users.find_one_and_update({"_id": ObjectId(user_id)},
+                                       {"$set": user_to_update.to_json()})
+
+    updated_user = UserEnhanced(user_to_update, user_id)
+
+    return updated_user.to_json(), 200
