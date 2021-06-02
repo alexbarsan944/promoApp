@@ -3,10 +3,9 @@ from functools import wraps
 from flask import session
 
 
-def user_authorization(f):
+def require_user_auth(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print(session)
         user_id = dict(session).get('user_id', None)
         user_email = dict(session).get('user_email', None)
 

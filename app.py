@@ -10,9 +10,10 @@ from flask_pymongo import PyMongo
 import routes.discounts_routes as discounts_routes
 import routes.store_routes as store_routes
 import routes.user_routes as user_routes
-from middleware.auth_decorator import user_authorization
+from middleware.auth_decorator import require_user_auth
+from middleware.delete_routes_decorator import require_delete_key
 from middleware.key_decorator import require_appkey
-from middleware.store_decorator import store_login_required
+from middleware.store_decorator import require_store_auth
 from routes.subscription_routes import get_subscription
 
 load_dotenv()
@@ -59,7 +60,7 @@ def cookies(response):
 
 
 @app.route('/')
-@user_authorization
+@require_user_auth
 def hello_world():
     email = dict(session)['user_email']['email']
     return f'Hello, you are logged in as {email}!'
@@ -76,25 +77,25 @@ def login():
 
 
 @app.route('/users/logout', methods=['GET', 'POST'])
-@user_authorization
+@require_user_auth
 def logout():
     return user_routes.logout()
 
 
 @app.route('/users/<user_id>/discounts', methods=['GET'])
-@user_authorization
+@require_user_auth
 def get_user_discounts(user_id):
     return user_routes.get_user_disc(mongo, user_id)
 
 
 @app.route('/users/<store_name>', methods=['POST'])
-@user_authorization
+@require_user_auth
 def get_discounts_from_store(store_name):
     return user_routes.get_discounts_from_store(mongo, store_name)
 
 
 @app.route('/users/<user_id>/stores/<store_id>', methods=['DELETE'])
-@user_authorization
+@require_user_auth
 def remove_user_discounts(user_id, store_id):
     return user_routes.remove_user_store_discounts(mongo, user_id, store_id)
 
@@ -137,14 +138,25 @@ def discount_update(discount_id):
 
 
 @app.route('/stores', methods=['GET'])
-@user_authorization
+@require_user_auth
 def get_stores():
     """ [GET] Return all available stores """
     return store_routes.get_all_stores(mongo)
 
 
+@app.route('/stores/<store_id>', methods=['GET'])
+def get_store(store_id):
+    """ [GET] Return a single store from ID """
+    return store_routes.get_store(mongo, store_id)
+
+
+@app.route('/stores/subscribe', methods=['POST'])
+@require_store_auth
+def get_key():
+    return get_subscription(mongo)
+
+
 @app.route('/stores/<store_id>/discounts', methods=['GET'])
-@store_login_required
 def get_store_discounts(store_id):
     """ [GET] Return all the discounts that are associated with a store """
     return store_routes.get_store_discounts(mongo, store_id)
@@ -162,14 +174,13 @@ def login_store():
     return store_routes.login_store(mongo)
 
 
-@app.route('/stores/<store_id>', methods=['GET'])
-@store_login_required
-def get_store(store_id):
-    """ [GET] Return a single store from ID """
-    return store_routes.get_store(mongo, store_id)
+# ------------------------------------------------------------------------
+# ------------------------------------------------------------------------
+""" Cloud function  """
 
 
-@app.route('/stores/subscribe', methods=['POST'])
-@store_login_required
-def get_key():
-    return get_subscription(mongo)
+@app.route("/api/discounts", methods=["DELETE"])
+@require_delete_key
+def discount_delete_auto():
+    """ [DELETE] Route for deleting expired discounts """
+    return discounts_routes.delete_auto(mongo)
