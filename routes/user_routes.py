@@ -21,6 +21,8 @@ def login_user(mongo):
 
     if email and password:
         user = mongo.db.users.find_one({"email": email})
+        if not user['discounts']:
+            user['discounts'] = []
         if user and verify_password(user['password'], password):
             session.permanent = True
             session['user_id'] = str(user['_id'])
@@ -31,15 +33,15 @@ def login_user(mongo):
             response["name"] = user['name']
 
             store_name_set = set()
+
             for idx, discount in enumerate(user['discounts']):
                 store_name_set.add(discount['store_name'])
-
             for store in store_name_set:
                 store_doc = mongo.db.stores.find_one({"store_name": store})
-                user_id = str(user['_id'])
-                store_id = str(store_doc['_id'])
-
-                subscribe(mongo, user_id, store_id)  # get new discounts
+                if store_doc:
+                    user_id = str(user['_id'])
+                    store_id = encode(store_doc['_id'])[1:-1]
+                    subscribe(mongo, user_id, store_id)  # get new discounts
 
             user = mongo.db.users.find_one({"email": email})
             response["discounts"] = user['discounts']

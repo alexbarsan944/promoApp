@@ -64,6 +64,7 @@ def login_store(mongo):
             response["success"] = True
             response['id'] = str(store['_id'])
             response['response'] = str(store['key'])
+            response['store_name'] = store['store_name']
 
             return json.dumps(response), 200
         else:
