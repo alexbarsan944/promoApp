@@ -129,3 +129,5 @@ dmypy.json
 extras/.DS_Store
 .DS_Store
 .DS_Store
+.env
+.idea
