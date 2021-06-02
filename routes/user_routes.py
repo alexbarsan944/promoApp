@@ -25,15 +25,21 @@ def login_user(mongo):
             session.permanent = True
             session['user_id'] = str(user['_id'])
             session['user_email'] = user['email']
+
             response["success"] = True
             response["response"] = str(user["_id"])
+            response["name"] = user['name']
 
             store_name_set = set()
             for idx, discount in enumerate(user['discounts']):
                 store_name_set.add(discount['store_name'])
 
             for store in store_name_set:
-                get_discounts_from_store(mongo, store)  # get new discounts
+                store_doc = mongo.db.stores.find_one({"store_name": store})
+                user_id = str(user['_id'])
+                store_id = str(store_doc['_id'])
+
+                subscribe(mongo, user_id, store_id)  # get new discounts
 
             user = mongo.db.users.find_one({"email": email})
             response["discounts"] = user['discounts']
@@ -82,10 +88,10 @@ def register_user(mongo):
     return saved_user.to_json(), 201
 
 
-def get_discounts_from_store(mongo, store_name):
+def subscribe(mongo, user_id, store_id):
     """ [POST] Get all the discounts form <store_name> and append to user object"""
 
-    def update(email, discounts_array):
+    def update(email, store_name, discounts_array):
         """ Update the user with the new discounts from store """
 
         user = mongo.db.users.find_one({"email": email})
@@ -100,6 +106,7 @@ def get_discounts_from_store(mongo, store_name):
         else:
             user_to_update.to_json()['discounts'] = discounts_array
 
+        print(discounts_array)
         mongo.db.users.find_one_and_update({"_id": user_id},
                                            {"$set": user_to_update.to_json()})
 
@@ -107,12 +114,18 @@ def get_discounts_from_store(mongo, store_name):
 
         return updated_user.to_json(), 200
 
-    store_doc = mongo.db.stores.find_one({"store_name": store_name})
-    if store_doc is None:
-        response = {
-            "success": False,
-            "response": "Store doesn't exist"
-        }
+    user_doc = mongo.db.users.find_one({"_id": ObjectId(user_id)})
+    store_doc = mongo.db.stores.find_one({"_id": ObjectId(store_id)})
+    response = {
+        "success": False,
+        "response": " "
+    }
+
+    if not user_doc:
+        response['response'] = 'No existing user with that ID.'
+        return response, 404
+    if not store_doc:
+        response['response'] = 'No existing store with that ID.'
         return response, 404
 
     store_id = store_doc['_id']
@@ -128,7 +141,7 @@ def get_discounts_from_store(mongo, store_name):
     for discount in discounts:
         discounts_to_send.append({
             'discount_id': encode(discount['_id'])[1:-1],
-            "store_name": store_name,
+            "store_name": store_doc['store_name'],
             "gama_produs": discount['gama_produs'],
             "procent": discount['procent'],
             'data_expirare': discount['data_expirare']
@@ -143,7 +156,7 @@ def get_discounts_from_store(mongo, store_name):
 
     email = dict(session)['user_email']
 
-    update(email, discounts_to_send)
+    update(email, store_doc['store_name'], discounts_to_send)
     return json.dumps(discounts_to_send), 200
 
 

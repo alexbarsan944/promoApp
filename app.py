@@ -88,10 +88,10 @@ def get_user_discounts(user_id):
     return user_routes.get_user_disc(mongo, user_id)
 
 
-@app.route('/users/<store_name>', methods=['POST'])
+@app.route('/users/<user_id>/stores/<store_id>', methods=['POST'])
 @require_user_auth
-def get_discounts_from_store(store_name):
-    return user_routes.get_discounts_from_store(mongo, store_name)
+def get_discounts_from_store(user_id, store_id):
+    return user_routes.subscribe(mongo, user_id, store_id)
 
 
 @app.route('/users/<user_id>/stores/<store_id>', methods=['DELETE'])
